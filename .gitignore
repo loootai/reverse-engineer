@@ -1,0 +1,14 @@
+node_modules/
+.next/
+.data/
+app-out/
+reverse/
+watch/
+research/
+.env
+.env.*
+!.env.example
+.DS_Store
+__pycache__/
+*.py[cod]
+*.tsbuildinfo

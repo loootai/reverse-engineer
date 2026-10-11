@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: looot support
+    url: https://looot.ai/contact
+    about: Account, billing or a wrong answer from a looot run.
+  - name: looot docs
+    url: https://docs.looot.ai
+    about: How the CLI, MCP server and REST API work.

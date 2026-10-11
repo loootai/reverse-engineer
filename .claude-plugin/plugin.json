@@ -1,0 +1,26 @@
+{
+  "name": "reverse-engineer",
+  "displayName": "reverse-engineer",
+  "version": "0.1.0",
+  "description": "Reverse engineer a product from public evidence, rebuild it on looot, and request the data sources that are missing. Eight skills and the looot MCP server.",
+  "author": {
+    "name": "looot",
+    "url": "https://looot.ai"
+  },
+  "homepage": "https://looot.ai",
+  "license": "MIT",
+  "keywords": [
+    "reverse-engineering",
+    "research",
+    "mcp",
+    "looot",
+    "data-apis",
+    "competitor-analysis",
+    "skills"
+  ],
+  "repository": "https://github.com/loootai/reverse-engineer",
+  "privacyPolicyUrl": "https://looot.ai/privacy",
+  "supportUrl": "https://looot.ai/contact",
+  "documentationUrl": "https://docs.looot.ai",
+  "termsOfServiceUrl": "https://looot.ai/terms"
+}

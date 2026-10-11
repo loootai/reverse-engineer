@@ -1,0 +1,31 @@
+# reverse-engineer
+
+> An open-source skill pack: reverse engineer a product from public evidence, rebuild it on looot, and request the data sources that are missing.
+
+looot (https://looot.ai) is one key and one prepaid balance for 2,500+ data API endpoints from 90+ providers. The agent searches the catalog, sees the price before it runs, and pays per call. A failed call costs nothing.
+
+## Skills
+- skills/reverse-engineer/SKILL.md: how a product works, every step tagged observed, inferred or unknown
+- skills/rebuild-on-looot/SKILL.md: capability map to real looot jobs, then a working app from template/
+- skills/request-provider/SKILL.md: confirm a gap, then ask looot and open an issue
+- skills/bounded-probe/SKILL.md, skills/site-teardown/SKILL.md, skills/evidence-research/SKILL.md, skills/competitor-diff/SKILL.md, skills/claims-audit/SKILL.md: the supporting steps
+
+## Install
+- MCP: claude mcp add --transport http looot https://api.looot.ai/mcp
+- Skills: npx skills@1.7.0 add loootai/reverse-engineer
+- Claude Code plugin: /plugin marketplace add loootai/reverse-engineer
+- No install: read AGENTS.md
+
+## Free path (no token)
+- GET https://api.looot.ai/v1/catalog/overview?depth=jobs
+- GET https://api.looot.ai/v1/public-catalog?q=<words>
+- Plain GETs of public pages. Read scripts as text and never run them.
+
+## Rules
+Public information only. Quote before any paid call. Stable idempotency key per call. A run still in progress is pending, not failed. Never put tokens or personal data in a request.
+
+## Links
+- Examples: examples/
+- Template: template/
+- Docs: https://docs.looot.ai
+- Missing provider: the capability_request MCP tool or POST /v1/capability-requests (https://docs.looot.ai/support)

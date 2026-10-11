@@ -1,0 +1,59 @@
+name: Provider request
+description: Ask for a data source or provider that looot does not have yet.
+title: "Provider request: "
+labels: ["provider-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This issue is public. Do not post tokens, API keys, customer names or personal data.
+        Search the looot catalog first, with several phrasings. The `request-provider` skill does this for you.
+        Opening an issue puts the request in front of the looot team. It makes no promise about whether or when a provider is added.
+  - type: input
+    id: provider
+    attributes:
+      label: Provider name
+      description: The company that sells the data, or "any provider" if you only know the capability.
+    validations:
+      required: true
+  - type: input
+    id: docs
+    attributes:
+      label: Docs URL
+      description: A public link to the provider's API reference.
+  - type: textarea
+    id: endpoints
+    attributes:
+      label: Endpoints wanted
+      description: One per line. Name the endpoint or say what it does.
+    validations:
+      required: true
+  - type: textarea
+    id: io
+    attributes:
+      label: Inputs and outputs
+      description: The fields each endpoint should take and return.
+  - type: input
+    id: price
+    attributes:
+      label: Public price
+      description: The provider's published price and the date you read it, or "unknown".
+  - type: textarea
+    id: building
+    attributes:
+      label: What you are building
+      description: One or two sentences. A link to the repo is fine.
+    validations:
+      required: true
+  - type: input
+    id: volume
+    attributes:
+      label: Calls per month
+      description: A rough number.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives already tried in looot
+      description: The job ids you tried and why they fall short, and the phrasings you searched.
+    validations:
+      required: true

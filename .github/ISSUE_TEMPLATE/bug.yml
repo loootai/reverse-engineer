@@ -1,0 +1,32 @@
+name: Bug
+description: A skill gives a wrong instruction, the template fails, or the check script is wrong.
+title: "Bug: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: This issue is public. Do not post tokens, API keys or personal data.
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where
+      options:
+        - A skill (SKILL.md)
+        - The template
+        - The check script
+        - The docs or install steps
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: The command you ran, what you expected and what you got. Paste the real output.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      description: The release tag or commit you used, and the agent you ran it in.

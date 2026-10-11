@@ -1,0 +1,19 @@
+{
+  "name": "looot-reverse-engineer",
+  "description": "Skills that reverse engineer a product from public evidence, rebuild it on looot and request what is missing.",
+  "owner": {
+    "name": "looot",
+    "url": "https://looot.ai"
+  },
+  "plugins": [
+    {
+      "name": "reverse-engineer",
+      "source": "./",
+      "description": "Reverse engineer a product from public evidence, rebuild it on looot, and request the data sources that are missing.",
+      "version": "0.1.0",
+      "category": "research",
+      "keywords": ["reverse-engineering", "research", "mcp", "looot", "competitor-analysis"],
+      "homepage": "https://looot.ai"
+    }
+  ]
+}

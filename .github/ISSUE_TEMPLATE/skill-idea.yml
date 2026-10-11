@@ -1,0 +1,27 @@
+name: Skill idea
+description: Suggest a new skill or a change to one.
+title: "Skill idea: "
+labels: ["skill-idea"]
+body:
+  - type: markdown
+    attributes:
+      value: This issue is public. Keep it to the idea. Do not post tokens or personal data.
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: What the skill does, in two or three sentences.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: What you tried today
+      description: How you do this now, and where it breaks.
+    validations:
+      required: true
+  - type: textarea
+    id: free
+    attributes:
+      label: Which steps can use free reads
+      description: Public pages and the free catalog reads need no looot balance. Say which steps need a paid job.

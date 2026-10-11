@@ -1,0 +1,16 @@
+# looot-app-template
+
+A starter for a small product built on looot (https://looot.ai): one key and one prepaid balance for 2,500+ data API endpoints.
+
+## Run it
+- Demo, no token, no network: npm run demo (http://localhost:3600)
+- Dry run, no token, no call: npm run app -- --input items.txt --dry-run
+- Real run: LOOOT_TOKEN=... npm run app -- --input items.txt --cap 0.50
+
+## Money rules
+Quote before any call. --cap stops the run before a call that would pass it. One idempotency key per (input, job). A run still in progress is pending and is collected on the next run, never failed at $0. A 401 or 402 stops the run.
+
+## Edit
+src/jobs.ts lists the looot jobs. src/engine/pipeline.ts runs them. Find jobs with GET https://api.looot.ai/v1/public-catalog?q=<words>.
+
+Docs: https://docs.looot.ai  Skill file: https://looot.ai/skill.md
