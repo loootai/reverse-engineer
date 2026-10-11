@@ -1,6 +1,6 @@
 {
   "name": "reverse-engineer-skills",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Skill pack: reverse engineer a product from public evidence, rebuild it on looot, request what is missing.",
   "license": "MIT",

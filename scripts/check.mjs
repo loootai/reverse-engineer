@@ -141,6 +141,14 @@ if (copies.every(existsSync)) {
   if (readFileSync(copies[0], "utf8") !== readFileSync(copies[1], "utf8")) add(copies[1], "differs from the copy in rebuild-on-looot, keep them identical");
 } else add(skillsDir, "catalog-search.mjs missing from rebuild-on-looot or request-provider");
 
+// 3b. The template must ship the admin gate and the skill must require it.
+const GATE_FILES = ["src/proxy.ts", "src/lib/auth/routes.ts", "src/lib/auth/guard.ts", "src/lib/auth/session.ts", "src/lib/auth/policy.ts", "src/lib/auth/limits.ts", "src/lib/auth/password.ts", "src/lib/auth/routeMap.test.ts", "src/lib/auth/routeGate.test.ts", "src/lib/auth/flow.test.ts", "src/app/login/page.tsx", "src/app/api/auth/login/route.ts", "src/app/api/health/route.ts"];
+for (const f of GATE_FILES) if (!existsSync(join(ROOT, "template", f))) add(join(ROOT, "template"), `admin gate file missing: ${f}`);
+const rebuildSkill = join(skillsDir, "rebuild-on-looot", "SKILL.md");
+if (existsSync(rebuildSkill) && !readFileSync(rebuildSkill, "utf8").includes("### Admin gate checklist")) add(rebuildSkill, 'missing the "Admin gate checklist" section');
+const templateReadme = join(ROOT, "template", "README.md");
+if (existsSync(templateReadme) && !readFileSync(templateReadme, "utf8").includes("## Securing a deployment")) add(templateReadme, 'missing the "Securing a deployment" section');
+
 // 4. Job ids against the live catalog.
 let catalogIds = null;
 if (offline) {

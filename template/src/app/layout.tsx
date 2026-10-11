@@ -1,9 +1,12 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { AppShell, type ShellNavSection } from "@/components/AppShell";
 import { APP_NAME } from "@/jobs";
-import { getState, isDemo } from "@/lib/app";
+import { getState } from "@/lib/app";
+import { currentCsrf, requireAdminPage } from "@/lib/auth/guard";
+import { isPublicPath } from "@/lib/auth/routes";
 import { Ledger } from "@/lib/ledger";
 import { usd } from "@/lib/money";
 import "./globals.css";
@@ -39,15 +42,32 @@ const NAV: ShellNavSection[] = [
 ];
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const path = (await headers()).get("x-app-path") ?? "";
+  // Public routes (sign-in) render with no stored data and no admin navigation.
+  if (path !== "" && isPublicPath(path)) {
+    return (
+      <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
+        <head>
+          <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        </head>
+        <body className="min-h-dvh bg-page text-ink">
+          <main className="mx-auto min-h-dvh max-w-xl px-4 py-10">{children}</main>
+        </body>
+      </html>
+    );
+  }
+  const gate = await requireAdminPage();
+  const csrf = await currentCsrf();
   const state = await getState();
   const total = new Ledger(state.ledger).totalMicros;
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <meta name="app-csrf" content={csrf} />
       </head>
       <body className="min-h-dvh bg-page text-ink">
-        <AppShell appName={APP_NAME} nav={NAV} githubHref="https://github.com/loootai/reverse-engineer" demoLabel={isDemo() ? "Demo data" : undefined} spend={{ label: "Spent in total", spent: usd(total) }}>
+        <AppShell appName={APP_NAME} nav={NAV} githubHref="https://github.com/loootai/reverse-engineer" demoLabel={gate.policy.mode === "open-demo" ? "Demo, no sign-in" : undefined} signOut={gate.policy.mode === "login"} spend={{ label: "Spent in total", spent: usd(total) }}>
           <div className="mx-auto max-w-5xl px-4 py-6 md:px-6">{children}</div>
         </AppShell>
       </body>

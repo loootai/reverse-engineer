@@ -1,7 +1,7 @@
 {
   "name": "reverse-engineer",
   "displayName": "reverse-engineer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Reverse engineer a product from public evidence, rebuild it on looot, and request the data sources that are missing. Eight skills and the looot MCP server.",
   "author": {
     "name": "looot",

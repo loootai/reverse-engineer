@@ -1,9 +1,11 @@
+import { requireAdminPage } from "@/lib/auth/guard";
 import { RunPanel } from "@/components/RunPanel";
 import { DEMO_DOMAINS } from "@/demo/fixtures";
-import { getState, isDemo } from "@/lib/app";
+import { getState, isDemo, uiSpendCapUsd } from "@/lib/app";
 import { usd } from "@/lib/money";
 
 export default async function ResultsPage() {
+  await requireAdminPage();
   const state = await getState();
   const rows = Object.values(state.results).sort((a, b) => a.item.localeCompare(b.item));
   const demo = isDemo();
@@ -13,7 +15,7 @@ export default async function ResultsPage() {
         <h1 className="text-20 font-semibold">Results</h1>
         <p className="mt-1 text-13 text-mute">Replace this page with your product. The quote, the cap, the ledger and the idempotency keys are already wired.</p>
       </header>
-      <RunPanel initial={demo ? DEMO_DOMAINS.join("\n") : ""} demo={demo} />
+      <RunPanel initial={demo ? DEMO_DOMAINS.join("\n") : ""} demo={demo} capUsd={uiSpendCapUsd()} />
       <section aria-label="Results" className="overflow-x-auto rounded-panel border border-line bg-panel">
         <table className="w-full text-left text-13">
           <thead>

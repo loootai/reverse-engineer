@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { adminFetch } from "./adminFetch";
 
 interface QuoteLine {
   jobId: string;
@@ -21,10 +22,9 @@ interface Quote {
 const money = (micros: number) => `$${(micros / 1e6).toFixed(micros !== 0 && micros < 10_000 ? 4 : 2)}`;
 
 /** Paste items, see the quote, then run. The Run button shows the most it can spend. */
-export function RunPanel({ initial, demo }: { initial: string; demo: boolean }) {
+export function RunPanel({ initial, demo, capUsd }: { initial: string; demo: boolean; capUsd: number }) {
   const router = useRouter();
   const [text, setText] = useState(initial);
-  const [cap, setCap] = useState("1");
   const [quote, setQuote] = useState<Quote | null>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
@@ -35,7 +35,7 @@ export function RunPanel({ initial, demo }: { initial: string; demo: boolean }) 
     setBusy(true);
     setMessage("");
     try {
-      const res = await fetch("/api/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items, capUsd: Number(cap), dryRun }) });
+      const res = await adminFetch("/api/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items, dryRun }) });
       const data = await res.json();
       if (data.quote) setQuote(data.quote);
       if (!res.ok) return setMessage(data.error ?? `Request failed (${res.status}).`);
@@ -57,12 +57,9 @@ export function RunPanel({ initial, demo }: { initial: string; demo: boolean }) 
       </label>
       <textarea id="items" value={text} onChange={(e) => { setText(e.target.value); setQuote(null); }} rows={5} className="num mt-1 w-full rounded-control border border-line-strong bg-page p-2 text-13" />
       <div className="mt-3 flex flex-wrap items-end gap-3">
-        <div>
-          <label htmlFor="cap" className="block text-12 font-medium text-mute">
-            Spend cap, dollars
-          </label>
-          <input id="cap" inputMode="decimal" value={cap} onChange={(e) => setCap(e.target.value)} className="num mt-1 h-8 w-24 rounded-control border border-line-strong bg-page px-2 text-13" />
-        </div>
+        <p className="text-12 text-mute">
+          Spend cap per run: <strong className="num text-ink">{money(capUsd * 1e6)}</strong>, set on the server.
+        </p>
         <button type="button" disabled={busy || items.length === 0} onClick={() => call(true)} className="h-8 rounded-control border border-line-strong bg-panel px-3 text-13 font-medium hover:bg-hover disabled:opacity-50">
           Get quote
         </button>

@@ -1,3 +1,4 @@
+import { requireAdminPage } from "@/lib/auth/guard";
 import { getState } from "@/lib/app";
 import { Ledger } from "@/lib/ledger";
 import { usd } from "@/lib/money";
@@ -5,6 +6,7 @@ import { usd } from "@/lib/money";
 export const metadata = { title: "Costs" };
 
 export default async function CostsPage() {
+  await requireAdminPage();
   const state = await getState();
   const ledger = new Ledger(state.ledger);
   const rows = ledger.byJob();

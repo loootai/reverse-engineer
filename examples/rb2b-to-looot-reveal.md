@@ -35,7 +35,7 @@ The last row is partly covered because the catalog entry takes a hash, but nothi
 
 - Person-level identification is off by default. It needs the user's own hashes or the user's own supplier contract, a second consent, a US-only gate, and five ticked conditions on a setup page. looot supplies no person-level visitor identity and the repo ships with no supplier.
 - Email finding. Not part of the visitor feed.
-- A hosted multi-user mode. The app is local and has no sign-in.
+- A hosted multi-user mode. The app is local. Outside the demo its admin pages need a password.
 - The browser-side calls to identity networks. The repo makes none. Everything runs on the user's server.
 
 ## What was missing

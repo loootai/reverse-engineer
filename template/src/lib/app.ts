@@ -11,8 +11,14 @@ import { answeredSet, loadState, mergeRun, saveState, statePathFromEnv, type App
 /** true when the web UI runs on sample data: no token, no network, no cost. */
 export const isDemo = (): boolean => process.env.NEXT_PUBLIC_DEMO === "1";
 
-/** The hardest ceiling for one run started from the web UI. The form cap cannot exceed it. */
+/** The hardest ceiling for one run started from the web UI. The server cap cannot exceed it. */
 export const MAX_UI_CAP_USD = 25;
+
+/** Spend cap for one run started from the web UI, in dollars. Read from APP_SPEND_CAP_USD on the server, default 1. The caller of /api/run cannot change it. */
+export function uiSpendCapUsd(env: Record<string, string | undefined> = process.env): number {
+  const n = Number(env.APP_SPEND_CAP_USD);
+  return env.APP_SPEND_CAP_USD !== undefined && env.APP_SPEND_CAP_USD.trim() !== "" && Number.isFinite(n) && n >= 0 ? Math.min(n, MAX_UI_CAP_USD) : 1;
+}
 
 const g = globalThis as unknown as { __demoState?: AppState };
 

@@ -127,7 +127,7 @@ The template has its own checks: `cd template && npm test && npm run typecheck &
 
 ## Status
 
-- Tested by hand: `claude plugin validate` passes on the marketplace and plugin manifests, `npx skills@1.7.0 add <path> --list` lists all eight skills, and the template passes its tests, typecheck with a clean cache, lint and build, and its demo returns 200.
+- Tested by hand: `claude plugin validate` passes on the marketplace and plugin manifests, `npx skills@1.7.0 add <path> --list` lists all eight skills, and the template passes its tests (including the admin gate tests), typecheck with a clean cache, lint and build, its demo returns 200, and outside the demo its admin pages and `/api/run` answer 401 or a redirect without a session cookie.
 - The free path of `reverse-engineer`, `rebuild-on-looot` and `request-provider` was followed by hand on one public target, up to the first paid step and up to the confirmation step of a request. No real issue or request was filed.
 - Not tested: the plugin install itself, Codex and Cursor, and any paid looot run from these skills. Prices in the skills are list prices read on 2026-10-11, and `inspect` shows the live number.
 - `npm audit` on the template reports 0 vulnerabilities in production dependencies. The dev chain (`eslint-config-next`, `braces`) reports 5 high findings with no patched version published. They run during `npm run lint` only.

@@ -95,8 +95,9 @@ The template gives you:
 - `src/demo/`: sample data and a fake runner.
 - `src/cli/`: the headless command.
 - `src/app/`: the web UI with a sidebar shell.
+- `src/proxy.ts` and `src/lib/auth/`: the admin gate (session cookie, password check, lockout, CSRF, route map). It ships with its tests. Keep all of it.
 
-Rename the app, set the port, and fill `src/jobs.ts` with the jobs from step 2. The shared tests use their own test job, so they stay green after you change `src/jobs.ts`. The demo runner reads the first string in each input as the item, so replace its sample rows in `src/demo/fixtures.ts` with data that fits your product.
+Rename the app, set the port, rename the `APP_` environment prefix if you like (change `src/lib/auth`, `.env.example`, `scripts/` and the README together), and fill `src/jobs.ts` with the jobs from step 2. The shared tests use their own test job, so they stay green after you change `src/jobs.ts`. The demo runner reads the first string in each input as the item, so replace its sample rows in `src/demo/fixtures.ts` with data that fits your product.
 
 ### 7. Build the engine
 
@@ -115,17 +116,30 @@ Rules every rebuild follows:
 
 - Demo: `npm run demo`. Sample data, no token, no network, costs nothing. Use reserved example domains and documentation IP ranges, never real people or companies.
 - Headless CLI: one command that takes a file or list and writes JSON, CSV and markdown. `--dry-run` prints the list-price quote and makes no call. A real run needs `LOOOT_TOKEN` and exits 2 when it is missing.
-- Web UI: the same engine behind a sidebar app. No account is required. Say in the README that it has no sign-in and must run behind the user's own access control if deployed.
+- Web UI: the same engine behind a sidebar app. Outside the demo it sits behind the admin gate from the template. Keep it. See the gate checklist below.
+
+### Admin gate checklist (required in every scaffolded app)
+
+A generated web UI that can spend on the user's looot token must not be open to whoever reaches it. Before you call the project done, every line is true:
+
+- [ ] `src/proxy.ts` and `src/lib/auth/` are present and unchanged in behavior: signed httpOnly SameSite=Lax cookie (Secure in production, with expiry), constant-time password check, lockout after repeated failures, CSRF token plus same-origin check on every state-changing admin request.
+- [ ] Every page and route handler you add is listed in `src/lib/auth/routes.ts` and calls `await requireAdminPage()` (pages) or `await requireAdminRoute(req)` (route handlers). A path not listed is admin. Only health, sign-in and sign-out, static files and a third-party receiver you name are public.
+- [ ] Any route that spends takes its cap from server config (`APP_SPEND_CAP_USD`), never from the request, goes through the quote step, and has a per-session rate limit.
+- [ ] A webhook receiver, if you add one, is public but verifies the sender's signature or shared secret and rejects everything else.
+- [ ] The client sends the CSRF token with `adminFetch`, not bare `fetch`, on every call to an admin route.
+- [ ] Demo mode is open with the "Demo, no sign-in" badge and refuses to start next to a real `LOOOT_TOKEN` or data file.
+- [ ] The generated project passes its own gate tests: `npm test` runs `src/lib/auth/routeMap.test.ts`, `routeGate.test.ts` and `flow.test.ts`. They read `src/app` from disk, so a new route with no gate fails them. Add a test for each route you add that proves it answers 401 without a session.
+- [ ] The README has a "Securing a deployment" section: what is public, what is admin, the environment variables, the in-memory rate limit note, and the stronger option of a VPN or identity-aware proxy. Start from the template README.
 
 ### 9. Test
 
 Write tests first where you can, and keep the failing run. Unit tests use mocked HTTP for the client, the engine, scoring and the CLI. Cover: quote math, cap stops a run, same key sent twice, pending is not failed, 401 and 402 stop the run, a dry run makes no call.
 
-Run tests, typecheck, lint and build. Keep the real output.
+Run tests (the gate tests included), typecheck, lint and build. Start the app outside the demo with a dummy password and confirm with curl that `/` and `/api/run` are closed without a cookie. Keep the real output.
 
 ### 10. README and the status section
 
-The README has: what it is in two sentences, what it replaces and at what public price (with the date), a quickstart with no paid call, the signals table with job ids and prices, the cost of a typical run at list price, what was dropped and why, what was requested, how the money rules work, and the install-for-agents block.
+The README has: what it is in two sentences, a "Securing a deployment" section, what it replaces and at what public price (with the date), a quickstart with no paid call, the signals table with job ids and prices, the cost of a typical run at list price, what was dropped and why, what was requested, how the money rules work, and the install-for-agents block.
 
 End with an honest Status section. State plainly:
 
@@ -142,6 +156,7 @@ Do not write "works" about anything that ran only against mocks.
 - The only match is marked unverified: use it, and say so in the Status section.
 - A job's price is unknown (`price.state` is not `known`): do not quote a number. Show "price not published" and let the cap stop the run.
 - The template fails its own checks after your edits: fix before you add features.
+- A gate test fails after you add a route: add the route to `src/lib/auth/routes.ts` and call the gate in it. Never loosen the test.
 
 ## Example
 

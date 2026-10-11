@@ -1,18 +1,19 @@
 {
   "name": "looot-app-template",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Starter for a small product built on looot: client with quote, cap and idempotency, demo mode, headless CLI with --dry-run, web UI.",
   "license": "MIT",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "demo": "NEXT_PUBLIC_DEMO=1 next dev -p 3600",
+    "demo": "node scripts/demoGuard.mjs && NEXT_PUBLIC_DEMO=1 next dev -p 3600",
     "build": "next build",
     "start": "next start",
     "test": "vitest run",
     "typecheck": "tsc --noEmit --incremental false",
     "lint": "eslint .",
     "app": "node --conditions=react-server --import tsx src/cli/main.ts",
+    "hash-password": "node scripts/hashPassword.mjs",
     "leak-scan": "bash scripts/leak-scan.sh ."
   },
   "dependencies": {

@@ -1,9 +1,11 @@
+import { requireAdminPage } from "@/lib/auth/guard";
 import { JOBS, OPTIONAL_JOBS, PRICES_AS_OF } from "@/jobs";
 import { usdPrecise } from "@/lib/money";
 
 export const metadata = { title: "Jobs and prices" };
 
-export default function JobsPage() {
+export default async function JobsPage() {
+  await requireAdminPage();
   const rows = [...JOBS.map((j) => ({ ...j, on: true })), ...OPTIONAL_JOBS.map((j) => ({ ...j, on: false }))];
   return (
     <div className="space-y-4">
